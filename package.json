@@ -1,0 +1,23 @@
+{
+  "name": "first-package",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sam-vic/movie_api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sam-vic/movie_api/issues"
+  },
+  "homepage": "https://github.com/sam-vic/movie_api#readme",
+  "description": "",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
