@@ -18,6 +18,10 @@
   "homepage": "https://github.com/sam-vic/movie_api#readme",
   "description": "",
   "dependencies": {
+    "gitignore": "^0.7.0",
     "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0"
   }
 }
