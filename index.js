@@ -1,6 +1,11 @@
-const express = require('express');
-const { times } = require('lodash');
+const express = require('express'),
+ morgan = require('morgan'),
+ fs = require('fs'),
+ path = require('path')
+
 const app = express()
+const accessLogStream = fs.createWriteStream(path.join(__dirname, './log.txt/log.text'), {flags: 'a'})
+
 let topBooks = [
     {
         title: 'Harry Potter and the Sorcerer\'s Stone',
@@ -26,6 +31,7 @@ let requestTime = (req, res, next) => {
     next();
 };
 
+app.use(morgan('combined', {stream: accessLogStream}))
 app.use(myLogger);
 app.use(requestTime);
 
