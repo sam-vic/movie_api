@@ -16,9 +16,13 @@ http.createServer((request, response) => {
   });
 
   if (q.pathname.includes('documentation')) {
-    filePath = (__dirname + '/documentation.html');
+    filePath = (__dirname + '/documentation.html')
+    response.writeHead(200, {'Content-Type': 'text/pain'})
+    response.end('Documentation on the club API.\n')
   } else {
-    filePath = '../index.html';
+    filePath = '../index.html'
+    response.writeHead(200, {'Content-Type': 'text/pain'})
+    response.end('Welcome')
   }
 
   fs.readFile(filePath, (err, data) => {
