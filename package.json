@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node server.js"
   },
-  "main": "server.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sam-vic/movie_api.git"
