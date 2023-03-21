@@ -1,12 +1,8 @@
 const express = require('express'),
- morgan = require('morgan'),
- fs = require('fs'),
- path = require('path')
-
+    morgan = require('morgan')
 const app = express()
-const accessLogStream = fs.createWriteStream(path.join(__dirname, './log.txt/log.text'), {flags: 'a'})
 
-let topBooks = [
+let topMovies = [
     {
         title: 'Harry Potter and the Sorcerer\'s Stone',
         author: 'J.K. Rowling'
@@ -21,44 +17,30 @@ let topBooks = [
     }
 ];
 
-let myLogger = (req, res, next) => {
-    console.log(req.url);
-    next();
-};
 
-let requestTime = (req, res, next) => {
-    req.requestTime = Date.now();
-    next();
-};
+// Morgan logs
+app.use(morgan('combined'))
 
-app.use(morgan('combined', {stream: accessLogStream}))
-app.use(myLogger);
-app.use(requestTime);
+//Endpoints
+// Movie data
+app.get('/movies', (req, res) => {
+    res.json(topMovies)
+})
 
-// GET requests (endpoints)
+// Home page
 app.get('/', (req, res) => {
-    let responseText = 'Welcome to my app!';
-    responseText += '<small>Requested at: ' + req.requestTime + '</small>';
-    res.send(responseText);
-});
+    res.end('This is the default')
+})
 
-app.get('/secreturl', (req, res) => {
-    let responseText = 'This is a secret url with super top-secret content.';
-    responseText += '<small>Requested at: ' + req.requestTime + '</small>';
-    res.send(responseText);
+//Route to static documentation page
+app.use('/documentation', express.static('public/documentation.html'))
 
-});
+//Error handling middleware  
+app.use((err, req, res, next) => {
+    console.err(err.stack)
+    res.status(500).send('Oops something went wrong!')
+})
 
-app.get('/documentation', (req, res) => {
-    res.sendFile('./server/documentation.html', { root: __dirname });
-});
-
-app.get('/books', (req, res) => {
-    res.json(topBooks);
-});
-
-
-// listen for requests
-app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
-});
+app.listen(8080, () =>{
+    console.log('app is up at \n localhost:8080')
+})
