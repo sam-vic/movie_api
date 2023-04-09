@@ -1,0 +1,32 @@
+{
+    "movies": [
+        {
+            "title": "The Godfather",
+            "description": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
+            "genre": "Crime",
+            "director": "Francis Ford Coppola",
+            "imgURL": "https://image.tmdb.org/t/p/w500/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg"
+          },
+          {
+            "title": "The Dark Knight",
+            "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+            "genre": "Action",
+            "director": "Christopher Nolan",
+            "imgURL": "https://image.tmdb.org/t/p/w500/1hRoyzDtpgMU7Dz4JF22RANzQO7.jpg"
+          },
+          {
+            "title": "Schindler's List",
+            "description": "In Poland during World War II, Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.",
+            "genre": "Drama",
+            "director": "Steven Spielberg",
+            "imgURL": "https://image.tmdb.org/t/p/w500/yPisjyLweCl1tbgwgtzBCNCBle.jpg"
+          },
+          {
+            "title": "The Lord of the Rings: The Fellowship of the Ring",
+            "description": "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
+            "genre": "Fantasy",
+            "director": "Peter Jackson",
+            "imgURL": "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg"
+          }
+    ]
+}

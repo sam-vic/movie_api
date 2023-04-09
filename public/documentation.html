@@ -35,7 +35,7 @@
       </table>
 
       <script>
-        fetch("../json/request.json")
+        fetch("../json/features.json")
           .then((response) => response.json())
           .then((data) => {
             const tableBody = document.querySelector("#featuresTable tbody");
@@ -59,13 +59,14 @@
               );
 
               // Display JSON strings in pre tags
+              const requestPre = document.createElement("pre");
+              requestPre.textContent = requestData;
+              row.insertCell().appendChild(requestPre);
+              
               const responsePre = document.createElement("pre");
               responsePre.textContent = responseData;
               row.insertCell().appendChild(responsePre);
 
-              const requestPre = document.createElement("pre");
-              requestPre.textContent = requestData;
-              row.insertCell().appendChild(requestPre);
             });
           })
           .catch((error) => console.error(error));

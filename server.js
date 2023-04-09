@@ -1,26 +1,17 @@
 const express = require('express'),
     bodyParser = require('body-parser'),
     uuid = require('uuid')
+const morgan = require('morgan')
+morgan
 
+const fs = require('fs')
 const app = express()
 
+
+const jsonData = fs.readFileSync('./json/movies.json')
+const data = JSON.parse(jsonData)
+
 app.use(bodyParser.json())
-
-
-let topMovies = [
-    {
-        title: 'Harry Potter and the Sorcerer\'s Stone',
-        author: 'J.K. Rowling'
-    },
-    {
-        title: 'Lord of the Rings',
-        author: 'J.R.R. Tolkien'
-    },
-    {
-        title: 'Twilight',
-        author: 'Stephanie Meyer'
-    }
-];
 
 
 // Morgan logs
@@ -29,23 +20,27 @@ app.use(morgan('combined'))
 //Endpoints
 // Movie data
 app.get('/movies', (req, res) => {
-    res.json(topMovies)
+    res.json(data)
+})
+//Movie based on title 
+app.get('/movies/:title', (req, res) => {
+    res.json(data.movies.find((movie) => {
+        return movie.title === req.params.title
+    }))
 })
 
-// Home page
-app.get('/', (req, res) => {
-    res.end('This is the default')
+app.get('/genre/:name', (req, res) => {
+    const genreName = req.params.name
+    const genreMovies = data.movies.filter(movie => movie.genre === genreName)
+    if (genreMovies.length === 0) {
+        return res.status(404).send('No match');
+    } else if (genreMovies.length === 1) {
+        return res.json(genreMovies[0]);
+    } else {
+        return res.json(genreMovies);
+    }
 })
 
-//Route to static documentation page
-app.use('/documentation', express.static('public/documentation.html'))
-
-//Error handling middleware  
-app.use((err, req, res, next) => {
-    console.err(err.stack)
-    res.status(500).send('Oops something went wrong!')
-})
-
-app.listen(8080, () =>{
+app.listen(8080, () => {
     console.log('app is up at \n localhost:8080')
 })
