@@ -1,0 +1,31 @@
+body {
+    font-family: 'Poppins';
+    margin-top: 50px;
+}
+
+h1 {
+    font-family: 'Poppins';
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    padding: 8px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+td {
+    margin: 4px;
+}

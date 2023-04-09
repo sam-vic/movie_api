@@ -1,12 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <h1>This is the Documentation.html file</h1>
-</body>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins"
+    />
+  </head>
+  <body>
+    <h1>MyFlix API Project</h1>
+
+    <!-- //Endpoint Data Description -->
+    <div></div>
+    <!-- //Resource URL -->
+    <div></div>
+    <!-- //Parameters -->
+    <div>
+      <table id="featuresTable">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th>Request data formate</th>
+            <th>Response data formate</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <script>
+        fetch("../json/request.json")
+          .then((response) => response.json())
+          .then((data) => {
+            const tableBody = document.querySelector("#featuresTable tbody");
+            data.features.forEach((feature) => {
+              const row = tableBody.insertRow();
+              row.insertCell().textContent = feature.title;
+              row.insertCell().textContent = feature.description;
+              row.insertCell().textContent = feature.method;
+              row.insertCell().textContent = feature.endpoint;
+              // json to stings
+              const responseData = JSON.stringify(
+                feature.response_data_format,
+                null,
+                2
+              );
+
+              const requestData = JSON.stringify(
+                feature.request_body_format,
+                null,
+                2
+              );
+
+              // Display JSON strings in pre tags
+              const responsePre = document.createElement("pre");
+              responsePre.textContent = responseData;
+              row.insertCell().appendChild(responsePre);
+
+              const requestPre = document.createElement("pre");
+              requestPre.textContent = requestData;
+              row.insertCell().appendChild(requestPre);
+            });
+          })
+          .catch((error) => console.error(error));
+      </script>
+    </div>
+    <!-- //Example Request -->
+    <div></div>
+    <!-- //Example Response -->
+  </body>
 </html>

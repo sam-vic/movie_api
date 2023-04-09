@@ -1,0 +1,130 @@
+
+  {
+    "features": [
+      {
+
+        "title": "Return a list of ALL movies to the user",
+        "description": "This feature allows users to see a comprehensive list of all the movies in the database.",
+        "method": "GET",
+        "endpoint": "/movies",
+        "request_body_format": null,
+        "response_data_format": {
+          "movies": [
+            {
+              "title": "string",
+              "description": "string",
+              "genre": "string",
+              "director": "string",
+              "image_url": "string",
+              "featured": "boolean"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user",
+        "description": "This feature allows users to retrieve information about a specific movie based on its title.",
+        "method": "GET",
+        "endpoint": "/movies/:title",
+        "request_body_format": null,
+        "response_data_format": {
+          "title": "string",
+          "description": "string",
+          "genre": "string",
+          "director": "string",
+          "image_url": "string",
+          "featured": "boolean"
+        }
+      },
+      {
+        "title": "Return data about a genre (description) by name/title (e.g., “Thriller”)",
+        "description": "This feature allows users to retrieve information about a specific genre based on its name.",
+        "method": "GET",
+        "endpoint": "/genres/:name",
+        "request_body_format": null,
+        "response_data_format": {
+          "name": "string",
+          "description": "string"
+        }
+      },
+      {
+        "title": "Return data about a director (bio, birth year, death year) by name",
+        "description": "This feature allows users to retrieve information about a specific director based on their name.",
+        "method": "GET",
+        "endpoint": "/directors/:name",
+        "request_body_format": null,
+        "response_data_format": {
+          "name": "string",
+          "bio": "string",
+          "birth_year": "number",
+          "death_year": "number"
+        }
+      },
+      {
+        "title": "Allow new users to register",
+        "description": "This feature allows new users to create an account on the website.",
+        "method": "POST",
+        "endpoint": "/users",
+        "request_body_format": {
+          "email": "string",
+          "password": "string"
+        },
+        "response_data_format": {
+          "id": "string",
+          "email": "string"
+        }
+      },
+      {
+        "title": "Allow users to update their user info (username)",
+        "description": "This feature allows users to update their account information, specifically their username.",
+        "method": "PUT",
+        "endpoint": "/users/:id",
+        "request_body_format": {
+          "username": "string"
+        },
+        "response_data_format": {
+          "id": "string",
+          "email": "string",
+          "username": "string"
+        }
+      },
+        {
+            "title": "Allow users to add a movie to their list of favorites",
+            "description": "This feature allows users to add a movie to their list of favorite movies.",
+            "method": "POST",
+            "endpoint": "/users/:id/favorites",
+            "request_body_format": {
+              "movieID": "string",
+              "title": "string",
+              "description": "string",
+              "imageURL": "string",
+              "featured": "boolean",
+              "genre": "string",
+              "director": "string"
+            },
+            "response_data_format": {
+              "message": "string"
+            }
+        },
+        {
+            "title": "Allow users to remove a movie from their list of favorites",
+            "description": "This feature allows users to remove a movie from their list of favorite movies.",
+            "method": "DELETE",
+            "endpoint": "/users/:id/favorites/:movieID",
+            "request_body_format": null,
+            "response_data_format": {
+              "message": "string"
+            }
+        },
+        {
+            "title": "Allow existing users to deregister",
+            "description": "This feature allows users to delete their account on the website.",
+            "method": "DELETE",
+            "endpoint": "/users/:id",
+            "request_body_format": null,
+            "response_data_format": {
+              "message": "string"
+            }
+        }
+    ]
+}      
