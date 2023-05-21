@@ -61,19 +61,6 @@
       }
     },
     {
-      "title": "Return data about a genre (description) by name/title (e.g., “Thriller”)",
-      "description": "This feature allows users to retrieve information about a specific genre based on its name.",
-      "method": "GET",
-      "endpoint": "/genres/:name",
-      "request_body_format": null,
-      "response_data_format": {
-        "Genre": {
-          "Name": "Fantasy",
-          "Description": "A fantasy film is a genre that uses magic and supernatural elements as a primary plot or setting."
-        }
-      }
-    },
-    {
       "title": "Return data about a director (bio, birth year, death year) by name",
       "description": "This feature allows users to retrieve information about a specific director based on their name.",
       "method": "GET",
@@ -93,12 +80,16 @@
       "method": "POST",
       "endpoint": "/users",
       "request_body_format": {
-        "email": "string",
-        "password": "string"
+        "Username": "Username",
+        "Password": "Password",
+        "Email": "Email",
+        "Birthday": "Birthday"
       },
       "response_data_format": {
         "id": "string",
-        "email": "string"
+        "Password": "Password",
+        "Email": "Email",
+        "Birthday": "Birthday"
       }
     },
     {
