@@ -22,10 +22,16 @@ const jsonData = fs.readFileSync("./json/movies.json");
 const data = JSON.parse(jsonData);
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Morgan logs
 app.use(morgan("combined"));
+
+//importing auth logic
+const passport = require('passport')
+require('./passport.js')
+let auth = require('./auth.js')(app)
+
 
 //Endpoints
 app.get("/", (req, res) => {
@@ -33,7 +39,7 @@ app.get("/", (req, res) => {
 })
 
 // Movie data
-app.get("/movies", (req, res) => {
+app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
   .then((movies) => {
     res.status(201).json(movies)
@@ -108,7 +114,7 @@ app.post("/users", (req, res) => {
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.Username + "already exists");
+        return res.status(400).send(req.body.Username + " already exists ");
       } else {
         Users.create({
           Username: req.body.Username,
