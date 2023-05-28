@@ -34,6 +34,7 @@ let allowedOrigins = 'http://localhost:8080'
 
 const { check, validationResults } = require('express-validator')
 
+//logic to run cross origin validation
 app.use(cors({
   origin: (origin, callback) => {
     if(!origin) return callback(null, true, 'not an origin');
