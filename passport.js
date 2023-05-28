@@ -1,3 +1,5 @@
+//logic for validation on user's data and JWT 
+
 const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     Models = require('./models.js'),
@@ -13,26 +15,27 @@ passport.use(new LocalStrategy({
     passwordField: 'Password'
 }, async (username, password, callback) => {
     try {
+        console.log('Username:', username)
+        console.log('Password:', password)
+        
         const user = await Users.findOne({ Username: username })
-        if (error) {
-            console.log(error)
-            return callback(error)
-        }
-
+        console.log('User:', user)
+        
         if (!user) {
-            console.log('incorrect username')
+            console.log('Incorrect username')
             return callback(null, false, { message: 'Incorrect username.' })
         }
 
         if (!user.validatePassword(password)) {
-            console.log('incorrect password')
+            console.log('Incorrect password')
             return callback(null, false, { message: 'Incorrect password.' })
         }
 
-        console.log('finished')
+        console.log('Authentication successful')
         return callback(null, user)
     } catch (error) {
-        return callback(error);
+        console.error(error)
+        return callback(error)
     }
 }))
 

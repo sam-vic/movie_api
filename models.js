@@ -1,3 +1,5 @@
+//logic for defining movie and user data structure
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
 
