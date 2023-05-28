@@ -27,6 +27,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // Morgan logs
 app.use(morgan("combined"));
 
+//importing in Cross-Origin-Resourse-Sharing
+const cors =require('cors')
+app.use(cors())
+
 //importing auth logic
 const passport = require('passport')
 require('./passport.js')
@@ -49,6 +53,7 @@ app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) 
     res.status(500).send("Error:" + err)
   })
 });
+
 //Movie based on title
 app.get("/movies/:Title", passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
