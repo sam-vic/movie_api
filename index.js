@@ -32,7 +32,7 @@ app.use(morgan("combined"));
 const cors = require('cors')
 let allowedOrigins = 'http://localhost:8080'
 
-const { check, validationResults } = require('express-validator')
+const { check, validationResult } = require('express-validator')
 
 //logic to run cross origin validation
 app.use(cors({
@@ -170,10 +170,10 @@ app.post("/users",
 //Update user
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   [
-    check('Username', 'Username is required').isLength({ min: 5 }),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
+    check('Username', 'Username is required').optional().isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
+    check('Password', 'Password is required').optional().not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').optional().isEmail()
   ],
   async (req, res) => {
     try {
@@ -182,12 +182,16 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
       }
+      //hashing new password
+      let hashedPassword = Users.hashPassword(req.body.Password);
+
+
       const updatedUser = await Users.findOneAndUpdate(
         { Username: req.params.Username },
         {
           $set: {
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           }
