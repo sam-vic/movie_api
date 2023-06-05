@@ -138,8 +138,6 @@ app.get("/users/:Username", passport.authenticate('jwt', { session: false }), (r
   Birthday: Date
 }*/
 
-const { check, validationResult } = require('express-validator')
-
 app.post("/users",
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
