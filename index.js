@@ -5,10 +5,17 @@ const Models = require("./models.js");
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect("mongodb://localhost:27017/cfDB", {
+mongoose.connect("mongodb+srv://myFlixDB:Qwer741123@cluster0.xmni83o.mongodb.net/myFLixDB?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+//local connect
+{/*mongoose.connect("mongodb://localhost:27017/cfDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});*/}
+
 
 const express = require("express"),
   bodyParser = require("body-parser"),
