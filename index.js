@@ -5,7 +5,7 @@ const Models = require("./models.js");
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect("mongodb+srv://myFlixDB:Qwer741123@cluster0.xmni83o.mongodb.net/myFLixDB?retryWrites=true&w=majority", {
+mongo/ose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
