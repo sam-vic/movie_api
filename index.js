@@ -137,14 +137,18 @@ app.get("/users/:Username", passport.authenticate('jwt', { session: false }), (r
   Email: String,
   Birthday: Date
 }*/
+
+const { check, validationResult } = require('express-validator')
+
 app.post("/users",
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()
   ],
   (req, res) => {
+    const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() })
     }
@@ -152,7 +156,7 @@ app.post("/users",
     Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
-          return res.status(400).send(req.body.Username + " already exists ");
+          return res.status(400).send(req.body.Username + " already exists ")
         } else {
           Users.create({
             Username: req.body.Username,
@@ -161,19 +165,20 @@ app.post("/users",
             Birthday: req.body.Birthday
           })
             .then((user) => {
-              res.status(201).json(user);
+              res.status(201).json(user)
             })
             .catch((error) => {
-              console.error(error);
-              res.status(500).send("Error: " + error);
-            });
+              console.error(error)
+              res.status(500).send("Error: " + error)
+            })
         }
       })
       .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
-      });
+        console.error(error)
+        res.status(500).send("Error: " + error)
+      })
   })
+
 //Update user
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   [
@@ -236,11 +241,10 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 });
 
 const port = process.env.PORT || 8080
-app.listen(port, '0.0.0.0',() => {
- console.log('Listening on Port ' + port)
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port ' + port)
 })
 
 //importing local files to mongoAtlas to seed the database
 //mongoimport --uri mongodb+srv://myFlixDB:Qwer741123@cluster0.xmni83o.mongodb.net/myFlixDB? --collection movies  --type json --file ../../movies.json
 
- 
