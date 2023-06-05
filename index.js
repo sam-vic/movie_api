@@ -232,3 +232,8 @@ const port = process.env.PORT || 8080
 app.listen(port, '0.0.0.0',() => {
  console.log('Listening on Port ' + port)
 })
+
+//importing local files to mongoAtlas to seed the database
+//mongoimport --uri mongodb+srv://myFlixDB:Qwer741123@cluster0.xmni83o.mongodb.net/myFlixDB? --collection movies  --type json --file ../../movies.json
+
+ 
