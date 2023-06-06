@@ -117,7 +117,7 @@ app.post('/directors',
     Directors.findOne({ Name: req.body.Name })
       .then((director) => {
         if (director) {
-          return res.status(400).send(req.body.Username + " already exists ")
+          return res.status(400).send(req.body.Name + " already exists ")
         } else {
           Directors.create({
             Name: req.body.Name,
