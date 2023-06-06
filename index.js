@@ -2,8 +2,10 @@
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
+
 const Movies = Models.Movie;
 const Users = Models.User;
+const Directors = Models.Director
 
 //port
 mongoose.connect(process.env.CONNECTION_URI, {

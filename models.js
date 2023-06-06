@@ -34,10 +34,18 @@ let movieSchema = mongoose.Schema({
   userSchema.methods.validatePassword = function(password) {
     return bcrypt.compareSync(password, this.Password);
   };
+
+  let directorSchema = mongoose.Schema({
+    Name: {type: String, required: true},
+    Description: {type: String, required: true},
+    Movies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
+  });
   
   
   let Movie = mongoose.model('Movie', movieSchema);
   let User = mongoose.model('User', userSchema);
+  let Director = mongoose.model('Director', directorSchema)
   
   module.exports.Movie = Movie;
   module.exports.User = User;
+  module.exports.Director = Director
