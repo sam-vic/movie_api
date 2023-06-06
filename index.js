@@ -54,18 +54,17 @@ app.use(cors({
   }
 }))
 
-//importing auth logic
+//importing auth logic//
 const passport = require('passport')
 require('./passport.js')
 let auth = require('./auth.js')(app)
 
 
-//Endpoints
+//////////////Endpoints/////////////////////
 app.get("/", (req, res) => {
   res.send("Server is running");
 })
 
-// Movie data
 app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -77,7 +76,7 @@ app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) 
     })
 });
 
-//Movie based on title
+///////// Get movie based on title//////////////////
 app.get("/movies/:Title", passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movies) => {
@@ -89,7 +88,7 @@ app.get("/movies/:Title", passport.authenticate('jwt', { session: false }), (req
     })
 })
 
-//Movie based on genre thorugh /genres, and /movies
+//////// Get Movie based on genre ////////
 app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find({ 'Genre.Name': req.params.genreName })
     .then((movies) => {
@@ -101,33 +100,42 @@ app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), 
     })
 })
 
-//Get User list
-app.get("/users", passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.find()
-    .then((users) => {
-      res.status(201).json(users)
-    })
-    .catch((err) => {
-      console.error(err)
-      res.status(500).send("Error:" + err)
-    })
-})
-
-//Get User by username
-app.get("/users/:Username", passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOne({ Username: req.params.Username })
-    .then((users) => {
-      if (!users) {
-        return res.status(400).send(" Unable to find_" + req.body.Username);
-      } else {
-        res.status(201).json(users)
-      }
-    })
-    .catch((err) => {
-      console.error(err)
-      res.status(500).send("Error:" + err)
-    })
-})
+app.post("/directors",
+  [
+    check('Name', 'Director name is required').not().isEmpty().isLength({ min: 5 }),
+    check('Description', 'Invalid sescription').isAlpha().isLength({ min: 10 }),
+    check('Movies', 'Invalid Input').not().isEmpty().isAlpha().isLength({ min: 5 })
+  ],
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() })
+    }
+    Directors.findOne({ Name: req.body.Name })
+      .then((director) => {
+        if (director) {
+          return res.status(400).send(req.body.Username + " already exists ")
+        } else {
+          Directors.create({
+            Name: req.body.Name,
+            Description: req.body.Description,
+            Movies: req.body.Movies
+          })
+            .then((director) => {
+              res.status(201).json(director)
+            })
+            .catch((error) => {
+              console.error(error)
+              res.status(500).send("Error: " + error)
+            })
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+        res.status(500).send("Error: " + error)
+      })
+  })
 
 //Creating a user
 /* We’ll expect JSON in this format
@@ -137,8 +145,7 @@ app.get("/users/:Username", passport.authenticate('jwt', { session: false }), (r
   Password: String,
   Email: String,
   Birthday: Date
-}*/
-
+}*///
 app.post("/users",
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
@@ -225,59 +232,35 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     }
   })
 
-  app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { session: false }),
-  [
-    check('Favourite_movies', 'Undefined input').not().isEmpty(),
-    check('Favourite_movies', 'Movie not found').custom(async (value) => {
-      const movies = await Movies.find({ Title: { $in: value } });
-      const existingTitles = movies.map(movie => movie.Title);
-      const missingTitles = value.filter(title => !existingTitles.includes(title));
-      if (missingTitles.length > 0) {
-        throw new Error(`The following movies are not available: ${missingTitles.join(', ')}`);
+////////// Get User list ////////
+app.get("/users", passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.find()
+    .then((users) => {
+      res.status(201).json(users)
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).send("Error:" + err)
+    })
+})
+
+///////Get User by username//////
+app.get("/users/:Username", passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((users) => {
+      if (!users) {
+        return res.status(400).send(" Unable to find_" + req.body.Username);
+      } else {
+        res.status(201).json(users)
       }
     })
-  ],
-  async (req, res) => {
-    try {
-      const errors = validationResult(req)
+    .catch((err) => {
+      console.error(err)
+      res.status(500).send("Error:" + err)
+    })
+})
 
-      if (!errors.isEmpty()) {
-        console.log(errors,'this is the error')
-        return res.status(422).json({ errors: errors.array() })
-      }
-
-      const movieTitle = req.body.Favourite_movies
-
-      // Get the user by their username
-      const user = await Users.findOne({ Username: req.params.Username })
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' })
-      }
-
-      // Check if the movie is already in the user's favorite movies
-      const favoriteMovies = user.Favourite_movies.map(m => m.toString())
-      if (favoriteMovies.includes(movieTitle)) {
-        return res.status(400).json({ error: 'Movie already in favorites' })
-      }
-
-      // Find the movie in the database
-      const movie = await Movies.findOne({ Title: movieTitle })
-      if (!movie) {
-        return res.status(404).json({ error: 'Movie not found' })
-      }
-
-      // Add the movie to the user's favorite movies array
-      user.Favourite_movies.push(movie._id)
-      const updatedUser = await user.save()
-
-      res.json(updatedUser)
-    } catch (error) {
-      console.error(error)
-      res.status(500).send('Error: ' + error)
-    }
-  }
-)
-
+////// Deleting a user by Username //////
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
