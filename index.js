@@ -225,39 +225,25 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     }
   })
 
-app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { session: false }),
+  app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { session: false }),
   [
-    check('Favourite_movies', 'Favourite movies is not available')
-      .optional()
-      .isArray()
-      .custom(async (value, { req }) => {
-        // Check if each movie title exists in the database
-        const movies = await Movies.find({ Title: { $in: value } });
-        const existingTitles = movies.map(movie => movie.Title);
-
-        // Find missing titles
-        const missingTitles = value.filter(title => !existingTitles.includes(title));
-
-        if (missingTitles.length > 0) {
-          throw new Error(`The following movies are not available: ${missingTitles.join(', ')}`);
-        }
-      })
+    check('Favourite_movies', 'Undefined input').not().isEmpty(),
+    check('Favourite_movies.*', 'Movie not found').custom(async (value) => {
+      const movie = await Movies.findOne({ Title: value })
+      if (!movie) {
+        throw new Error(`Movie "${value}" not found`)
+      }
+    })
   ],
   async (req, res) => {
     try {
-      let errors = validationResult(req)
+      const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() })
       }
 
       const movieTitle = req.body.Favourite_movies
-
-      // Check if the movie exists in the database
-      const movie = await Movies.findOne({ Title: movieTitle })
-      if (!movie) {
-        return res.status(404).json({ error: 'Movie not found' })
-      }
 
       // Get the user by their username
       const user = await Users.findOne({ Username: req.params.Username })
@@ -267,8 +253,14 @@ app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { sess
 
       // Check if the movie is already in the user's favorite movies
       const favoriteMovies = user.Favourite_movies.map(m => m.toString())
-      if (favoriteMovies.includes(movie._id.toString())) {
+      if (favoriteMovies.includes(movieTitle)) {
         return res.status(400).json({ error: 'Movie already in favorites' })
+      }
+
+      // Find the movie in the database
+      const movie = await Movies.findOne({ Title: movieTitle })
+      if (!movie) {
+        return res.status(404).json({ error: 'Movie not found' })
       }
 
       // Add the movie to the user's favorite movies array
@@ -282,8 +274,6 @@ app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { sess
     }
   }
 )
-
-
 
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
