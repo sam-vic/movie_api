@@ -61,11 +61,11 @@ let auth = require('./auth.js')(app)
 
 
 //////////////Endpoints/////////////////////
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   res.send("Server is running");
 })
 
-app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies)
@@ -77,7 +77,7 @@ app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 ///////// Get movie based on title//////////////////
-app.get("/movies/:Title", passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movies) => {
       res.status(201).json(movies)
@@ -100,7 +100,7 @@ app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), 
     })
 })
 
-app.post("/directors",
+app.post('/directors',
   [
     check('Name', 'Director name is required').not().isEmpty().isLength({ min: 5 }),
     check('Description', 'Invalid sescription').isAlpha().isLength({ min: 10 }),
@@ -146,7 +146,7 @@ app.post("/directors",
   Email: String,
   Birthday: Date
 }*///
-app.post("/users",
+app.post('/users',
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
     check('Username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
@@ -233,7 +233,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   })
 
 ////////// Get User list ////////
-app.get("/users", passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
     .then((users) => {
       res.status(201).json(users)
@@ -245,7 +245,7 @@ app.get("/users", passport.authenticate('jwt', { session: false }), (req, res) =
 })
 
 ///////Get User by username//////
-app.get("/users/:Username", passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then((users) => {
       if (!users) {
