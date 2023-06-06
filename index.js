@@ -228,10 +228,12 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { session: false }),
   [
     check('Favourite_movies', 'Undefined input').not().isEmpty(),
-    check('Favourite_movies.*', 'Movie not found').custom(async (value) => {
-      const movie = await Movies.findOne({ Title: value })
-      if (!movie) {
-        throw new Error(`Movie "${value}" not found`)
+    check('Favourite_movies', 'Movie not found').custom(async (value) => {
+      const movies = await Movies.find({ Title: { $in: value } });
+      const existingTitles = movies.map(movie => movie.Title);
+      const missingTitles = value.filter(title => !existingTitles.includes(title));
+      if (missingTitles.length > 0) {
+        throw new Error(`The following movies are not available: ${missingTitles.join(', ')}`);
       }
     })
   ],
@@ -240,6 +242,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
+        console.log(errors,'this is the error')
         return res.status(422).json({ errors: errors.array() })
       }
 
