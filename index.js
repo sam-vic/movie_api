@@ -103,8 +103,8 @@ app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), 
 app.post('/directors',
   [
     check('Name', 'Director name is required').not().isEmpty().isLength({ min: 5 }),
-    check('Description', 'Invalid sescription').isAlpha().isLength({ min: 10 }),
-    check('Movies', 'Invalid Input').not().isEmpty().isAlpha().isLength({ min: 5 })
+    check('Description', 'Invalid sescription').isLength({ min: 10 }),
+    check('Movies', 'Invalid Input').not().isEmpty()
   ],
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
