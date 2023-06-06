@@ -179,6 +179,7 @@ app.post("/users",
 
 //Update user
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
+//code validation
   [
     check('Username', 'Username').optional().isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
