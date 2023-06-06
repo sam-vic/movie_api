@@ -227,11 +227,21 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
 
 app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { session: false }),
   [
-    check('Favourite_movies', 'Undefined input').not().isEmpty().isAlpha().isLength({ min: 5 }),
-    check('Favourite_movies', 'Favourite movies is not available').optional().custom((value, { req }) => {
-      // Custom validation logic for checking if the movie exists
-      return Movies.exists({ Title: value })
-    })
+    check('Favourite_movies', 'Favourite movies is not available')
+      .optional()
+      .isArray()
+      .custom(async (value, { req }) => {
+        // Check if each movie title exists in the database
+        const movies = await Movies.find({ Title: { $in: value } });
+        const existingTitles = movies.map(movie => movie.Title);
+
+        // Find missing titles
+        const missingTitles = value.filter(title => !existingTitles.includes(title));
+
+        if (missingTitles.length > 0) {
+          throw new Error(`The following movies are not available: ${missingTitles.join(', ')}`);
+        }
+      })
   ],
   async (req, res) => {
     try {
