@@ -1,0 +1,27 @@
+{
+    "Name": "Christopher Nolan",
+    "Description": "Christopher Edward Nolan is a British-American film director, producer, and screenwriter. He is one of the highest-grossing directors in history and has received multiple awards for his work.",
+    "Movies": [
+        "Inception",
+        "The Dark Knight",
+        "Interstellar"
+    ]
+}
+  {
+    "Name": "Steven Spielberg",
+    "Description": "Steven Allan Spielberg is an American film director, producer, and screenwriter. He is considered one of the founding pioneers of the New Hollywood era and one of the most popular directors and producers in film history.",
+    "Movies": [
+        "Jurassic Park",
+        "E.T. the Extra-Terrestrial",
+        "Schindler's List"
+    ]
+}
+  {
+    "Name": "Martin Scorsese",
+    "Description": "Martin Charles Scorsese is an American film director, producer, screenwriter, and actor. He is widely regarded as one of the greatest directors in cinema history.",
+    "Movies": [
+        "Goodfellas",
+        "The Departed",
+        "Taxi Driver"
+    ]
+}
