@@ -1,4 +1,4 @@
-//logic for defining movie and user data structure
+//logic for defining movie, user, director data structure
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
@@ -38,7 +38,7 @@ let movieSchema = mongoose.Schema({
   let directorSchema = mongoose.Schema({
     Name: {type: String, required: true},
     Description: {type: String, required: true},
-    Movies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
+    Movies: [{ type: String }]
   });
   
   
