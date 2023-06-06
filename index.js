@@ -180,7 +180,7 @@ app.post("/users",
 
 //Update user
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
-//code validation
+  //code validation
   [
     check('Username', 'Username').optional().isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
@@ -224,6 +224,56 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       res.status(500).send('Error: ' + error)
     }
   })
+
+app.put('/users/:Username/Favourite_movies', passport.authenticate('jwt', { session: false }),
+  [
+    check('Favourite_movies', 'Undefined input').not().isEmpty().isAlpha().isLength({ min: 5 }),
+    check('Favourite_movies', 'Favourite movies is not available').optional().custom((value, { req }) => {
+      // Custom validation logic for checking if the movie exists
+      return Movies.exists({ Title: value })
+    })
+  ],
+  async (req, res) => {
+    try {
+      let errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+      }
+
+      const movieTitle = req.body.Favourite_movies
+
+      // Check if the movie exists in the database
+      const movie = await Movies.findOne({ Title: movieTitle })
+      if (!movie) {
+        return res.status(404).json({ error: 'Movie not found' })
+      }
+
+      // Get the user by their username
+      const user = await Users.findOne({ Username: req.params.Username })
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' })
+      }
+
+      // Check if the movie is already in the user's favorite movies
+      const favoriteMovies = user.Favourite_movies.map(m => m.toString())
+      if (favoriteMovies.includes(movie._id.toString())) {
+        return res.status(400).json({ error: 'Movie already in favorites' })
+      }
+
+      // Add the movie to the user's favorite movies array
+      user.Favourite_movies.push(movie._id)
+      const updatedUser = await user.save()
+
+      res.json(updatedUser)
+    } catch (error) {
+      console.error(error)
+      res.status(500).send('Error: ' + error)
+    }
+  }
+)
+
+
 
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
