@@ -33,6 +33,59 @@
       }
     },
     {
+      "title": "Return a list of ALL movies to the user",
+      "description": "This feature allows users to see a comprehensive list of all the movies in the database.",
+      "method": "GET",
+      "endpoint": "/genre/:genreName",
+      "request_body_format": null,
+      "response_data_format": {
+        "movies": [
+          {
+            "Genre": {
+                "Name": "Thriller",
+                "Description": "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."
+            },
+            "Director": {
+                "Name": "David Fincher",
+                "Bio": "David Andrew Leo Fincher is an American film director.",
+                "Birth": "1962",
+                "Death": ""
+            },
+            "_id": "645abd06d75c9e7b7b68789c",
+            "Title": "Se7en",
+            "Description": "Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.",
+            "ImagePath": "se7en.png",
+            "Featured": false,
+            "Actors": [
+                "Brad Pitt",
+                "Morgan Freeman",
+                "Gwyneth Paltrow"
+            ]
+        },
+        {
+            "Genre": {
+                "Name": "Thriller",
+                "Description": "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."
+            },
+            "Director": {
+                "Name": "Jonathan Demme",
+                "Bio": "Robert Jonathan Demme was an American director, producer, and screenwriter.",
+                "Birth": "1944",
+                "Death": "2017"
+            },
+            "_id": "645aa5364ac45099a7ce1abd",
+            "Title": "Silence of the Lambs",
+            "Description": "Updates:A young FBI cadet must receive the help of an incarcerated and manipulative cannibal killer.",
+            "ImagePath": "silenceofthelambs.png",
+            "Featured": true,
+            "Actors": [
+                "Kasi Lemmings"
+            ]
+        }
+        ]
+      }
+    },
+    {
       "title": "Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user",
       "description": "This feature allows users to retrieve information about a specific movie based on its title.",
       "method": "GET",
@@ -46,7 +99,8 @@
         "Director": {
           "Name": "Peter Jackson",
           "Bio": "Peter Jackson is a New Zealand film director, producer, and screenwriter.",
-          "Birth": "1961"
+          "Birth": "1961",
+          "Death": "null"
         },
         "_id": "645abd06d75c9e7b7b68789a",
         "Title": "The Lord of the Rings: The Fellowship of the Ring",
@@ -61,6 +115,24 @@
       }
     },
     {
+      "title": "Return data of all directors ",
+      "description": "This feature allows users to retrieve the list of directors",
+      "method": "GET",
+      "endpoint": "/directors",
+      "request_body_format": null,
+      "response_data_format": {
+        "Director": {
+          "Name": "Francis Ford Coppola",
+          "Description": "Francis Ford Coppola is an American film director, producer, and screenwriter. He is best known for directing the films in The Godfather trilogy and Apocalypse Now.",
+          "Movies": [
+            "The Godfather",
+            "Apocalypse Now",
+            "The Conversation"
+          ]
+        }
+      }
+    },
+    {
       "title": "Return data about a director (bio, birth year, death year) by name",
       "description": "This feature allows users to retrieve information about a specific director based on their name.",
       "method": "GET",
@@ -72,6 +144,22 @@
           "Bio": "Peter Jackson is a New Zealand film director, producer, and screenwriter.",
           "Birth": "1961"
         }
+      }
+    },
+     {
+      "title": "Allow users to register new directors",
+      "description": "This feature allows new users to to register new directors",
+      "method": "POST",
+      "endpoint": "/directors",
+      "request_body_format": {
+        "Name": "Username",
+        "Description": "Password",
+        "Movies": ["movie1", "movie2"]
+      },
+      "response_body_format": {
+        "Name": "Username",
+        "Description": "Password",
+        "Movies": ["movie1", "movie2"]
       }
     },
     {
@@ -107,34 +195,6 @@
       }
     },
     {
-      "title": "Allow users to add a movie to their list of favorites",
-      "description": "This feature allows users to add a movie to their list of favorite movies.",
-      "method": "POST",
-      "endpoint": "/users/:id/favorites",
-      "request_body_format": {
-        "movieID": "string",
-        "title": "string",
-        "description": "string",
-        "imageURL": "string",
-        "featured": "boolean",
-        "genre": "string",
-        "director": "string"
-      },
-      "response_data_format": {
-        "message": "string"
-      }
-    },
-    {
-      "title": "Allow users to remove a movie from their list of favorites",
-      "description": "This feature allows users to remove a movie from their list of favorite movies.",
-      "method": "DELETE",
-      "endpoint": "/users/:id/favorites/:movieID",
-      "request_body_format": null,
-      "response_data_format": {
-        "message": "string"
-      }
-    },
-    {
       "title": "Allow existing users to deregister",
       "description": "This feature allows users to delete their account on the website.",
       "method": "DELETE",
@@ -146,3 +206,4 @@
     }
   ]
 }
+
