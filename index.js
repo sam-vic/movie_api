@@ -101,7 +101,7 @@ app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), 
       res.status(500).send("Error: " + err)
     })
 })
-
+//////// Add new directors to the list ////////
 app.post('/directors',
   [
     check('Name', 'Director name is required').not().isEmpty().isLength({ min: 5 }),
@@ -138,16 +138,40 @@ app.post('/directors',
         res.status(500).send("Error: " + error)
       })
   })
+//// List of all Directors ////
+app.get('/directors', passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Directors.find()
+      .then((directors) => {
+        res.status(201).json(directors)
+      })
+      .catch((err) => {
+        console.error(err)
+        res.status(500).send("Error:" + err)
+      })
+  })
+//// Get Director info my Name////
+app.get('/directors/:Name', passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Directors.findOne({ 'Directors.Name': req.params.Name })
+    .then((directors) => {
+      res.status(201).json(directors)
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).send("Error:" + err)
+    })
+  })
 
-//Creating a user
-/* We’ll expect JSON in this format
+////Creating a user////
+/* 
 {
   ID: Integer,
   Username: String,
   Password: String,
   Email: String,
   Birthday: Date
-}*///
+}*/
 app.post('/users',
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
@@ -187,7 +211,7 @@ app.post('/users',
       })
   })
 
-//Update user
+//Update user////
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   //code validation
   [
