@@ -14,9 +14,11 @@ API calls are done through the use of Postman.
 
 Examples:
 ////Creating a user////
+
 <img width="532" alt="Screenshot 2023-06-06 at 6 36 58 PM" src="https://github.com/sam-vic/movie_api/assets/64434536/14edf9de-fb3a-4810-a1c1-eef9682dfbf2">
 
 ///// mongoose.Schema /////
+
  <img width="573" alt="Screenshot 2023-06-06 at 6 36 36 PM" src="https://github.com/sam-vic/movie_api/assets/64434536/84b78abe-b4c1-468f-a0ef-f9bc232fb1ac">
 
 /////Testing on Postman ////
