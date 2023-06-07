@@ -1,13 +1,19 @@
 body {
-    font-family: 'Poppins';
-    margin-top: 50px;
+    font-family: 'Poppins', sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border: 5px solid #ccc;
+
+    margin: 30px;
 }
 
 h1 {
-    font-family: 'Poppins';
+    font-family: 'Poppins', sans-serif;
 }
 
 table {
+    font-family: 'Poppins', sans-serif;
+    /* Apply font to the table */
     border-collapse: collapse;
     width: 100%;
 }
@@ -16,6 +22,8 @@ td,
 th {
     padding: 8px;
     text-align: left;
+    border-right: 1px solid #ccc;
+    /* Add vertical border */
 }
 
 tr:nth-child(even) {
@@ -24,6 +32,12 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #ddd;
+}
+
+td:last-child,
+th:last-child {
+    border-right: none;
+    /* Remove vertical border on the last column */
 }
 
 td {
