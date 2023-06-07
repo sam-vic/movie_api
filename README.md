@@ -61,5 +61,8 @@ app.post('/users',
     Birthday: Date,
     FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
   })
-<img width="1432" alt="Screenshot 2023-06-05 at 5 48 24 PM" src="https://github.com/sam-vic/movie_api/assets/64434536/e804333d-aa53-4035-bd5e-a3fa2a9f3606">
-<img width="1431" alt="Screenshot 2023-06-05 at 5 49 23 PM" src="https://github.com/sam-vic/movie_api/assets/64434536/19896afe-5825-41f1-8d44-d449b2b39e92">
+<img width="1000" alt="Screenshot 2023-06-05 at 5 48 24 PM" src="https://github.com/sam-vic/movie_api/assets/64434536/e804333d-aa53-4035-bd5e-a3fa2a9f3606">
+
+<img width="1000" alt="Screenshot 2023-06-05 at 5 48 50 PM" src="https://github.com/sam-vic/movie_api/assets/64434536/7f04b816-ccbe-4bcd-8d7d-ec74c498c804">
+
+<img width="1000" alt="Screenshot 2023-06-05 at 5 49 23 PM" src="https://github.com/sam-vic/movie_api/assets/64434536/19896afe-5825-41f1-8d44-d449b2b39e92">
