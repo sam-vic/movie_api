@@ -153,7 +153,7 @@ app.get('/directors', passport.authenticate('jwt', { session: false }),
 //// Get Director info my Name////
 app.get('/directors/:Name', passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Directors.findOne({ 'Directors.Name': req.params.Name })
+    Directors.findOne({ Name: req.params.Name })
     .then((directors) => {
       res.status(201).json(directors)
     })
