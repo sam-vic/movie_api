@@ -40,7 +40,7 @@ app.use(morgan("combined"));
 
 //importing in Cross-Origin-Resourse-Sharing
 const cors = require('cors')
-let allowedOrigins = 'http://localhost:8080'
+let allowedOrigins = 'http://localhost:8080, http://localhost:1234'
 
 const { check, validationResult } = require('express-validator')
 
