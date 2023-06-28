@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
   res.send("Server is running");
 })
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies)
@@ -76,7 +76,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
       console.error(err)
       res.status(500).send("Error:" + err)
     })
-});
+})
 
 ///////// Get movie based on title//////////////////
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
