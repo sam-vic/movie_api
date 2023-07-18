@@ -2,6 +2,8 @@
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
+const ObjectId = mongoose.Types.ObjectId;
+
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -95,9 +97,10 @@ app.get('/movies/:_id', passport.authenticate('jwt', { session: false }), async 
   try {
     const { _id } = req.params;
 
-    // Use findOne with a query object specifying the _id as a string
-    const movie = await Movies.findOne({ _id });
+    // Convert the _id string to ObjectID
+    const objectId = new ObjectId(_id);
 
+    const movie = await Movies.findById(objectId);
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' });
     }
