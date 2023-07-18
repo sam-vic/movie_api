@@ -229,23 +229,23 @@ app.post('/users',
 app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { Username } = req.params
-    const { movieId } = req.body
+    const { movieTitle } = req.body
 
     const user = await Users.findOne({ Username })
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    const movie = await Movies.findById(movieId)
+    const movie = await Movies.findById(movieTitle)
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' })
     }
 
-    if (user.FavoriteMovies.includes(movieId)) {
+    if (user.FavoriteMovies.includes(movieTitle)) {
       return res.status(409).json({ message: 'Movie already in favorites' })
     }
 
-    user.FavoriteMovies.push(movieId)
+    user.FavoriteMovies.push(movieTitle)
     await user.save()
 
     res.status(200).json({ message: 'Movie added to favorites' })
