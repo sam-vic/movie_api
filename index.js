@@ -91,11 +91,11 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 })
 
 ///////// Get movie based on movie id//////////////////
-app.get('/movies/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/movies/:_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
-    const { movieId } = req.params;
+    const { _id } = req.params;
 
-    const movie = await Movies.findById(movieId);
+    const movie = await Movies.findById(_id);
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' });
     }
