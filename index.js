@@ -250,8 +250,8 @@ app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { sessi
 
     res.status(200).json({ message: 'Movie added to favorites' })
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: 'Server error' })
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 })
 
