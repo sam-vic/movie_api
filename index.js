@@ -211,28 +211,32 @@ app.post('/users',
       })
   })
 
-app.post('/users/:userId/favoriteMovies', async (req, res) => {
-  const { userId } = req.params;
-  const { movieId } = req.body;
-
+app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
-    const user = await Users.findById(userId);
+    const { Username } = req.params
+    const { movieId } = req.body
+
+    const user = await Users.findOne({ Username })
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found' })
     }
 
-    const movie = await Movie.findById(movieId);
+    const movie = await Movies.findById(movieId)
     if (!movie) {
-      return res.status(404).json({ message: 'Movie not found' });
+      return res.status(404).json({ message: 'Movie not found' })
     }
 
-    user.FavoriteMovies.push(movieId);
-    await user.save();
+    if (user.FavoriteMovies.includes(movieId)) {
+      return res.status(409).json({ message: 'Movie already in favorites' })
+    }
 
-    res.status(200).json({ message: 'Movie added to favorites' });
+    user.FavoriteMovies.push(movieId)
+    await user.save()
+
+    res.status(200).json({ message: 'Movie added to favorites' })
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
   }
 })
 
@@ -281,7 +285,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         { $set: updatedUserFields },
         { new: true }
       )
-      
+
       res.json(updatedUser)
     } catch (error) {
       console.error(error)
