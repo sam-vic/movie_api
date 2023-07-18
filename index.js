@@ -95,7 +95,10 @@ app.get('/movies/:_id', passport.authenticate('jwt', { session: false }), async 
   try {
     const { _id } = req.params;
 
-    const movie = await Movies.findById(_id);
+    // Convert the _id string to ObjectID
+    const objectId = new ObjectId(_id);
+
+    const movie = await Movies.findById(objectId);
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' });
     }
@@ -105,7 +108,7 @@ app.get('/movies/:_id', passport.authenticate('jwt', { session: false }), async 
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
-})
+});
 
 //////// Get Movie based on genre ////////
 app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
