@@ -211,6 +211,21 @@ app.post('/users',
       })
   })
 
+  // pulls up all of user's favMovies
+  app.get('/users/:Username/favoriteMovies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+      const user = await Users.findOne({ Username: req.params.Username })
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' })
+      }
+      res.status(200).json(user.FavoriteMovies)
+    } catch (err) {
+      console.error(err)
+      res.status(500).json({ message: 'Server error' })
+    }
+  })
+
+// allow user to add favmovies to their favMovie arry
 app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { Username } = req.params
