@@ -154,13 +154,13 @@ app.get('/directors', passport.authenticate('jwt', { session: false }),
 app.get('/directors/:Name', passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Directors.findOne({ Name: req.params.Name })
-    .then((directors) => {
-      res.status(201).json(directors)
-    })
-    .catch((err) => {
-      console.error(err)
-      res.status(500).send("Error:" + err)
-    })
+      .then((directors) => {
+        res.status(201).json(directors)
+      })
+      .catch((err) => {
+        console.error(err)
+        res.status(500).send("Error:" + err)
+      })
   })
 
 ////Creating a user////
@@ -211,6 +211,31 @@ app.post('/users',
       })
   })
 
+app.post('/users/:userId/favoriteMovies', async (req, res) => {
+  const { userId } = req.params;
+  const { movieId } = req.body;
+
+  try {
+    const user = await Users.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      return res.status(404).json({ message: 'Movie not found' });
+    }
+
+    user.FavoriteMovies.push(movieId);
+    await user.save();
+
+    res.status(200).json({ message: 'Movie added to favorites' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+})
+
 //Update user////
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   //code validation
@@ -235,22 +260,28 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
       }
+
+      const updatedUserFields = {
+        Username: req.body.Username,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      }
+
       //hashing new password
-      let hashedPassword = Users.hashPassword(req.body.Password);
+      if (req.body.Password) {
+        // Only update the password if it's provided in the request
+        const hashedPassword = Users.hashPassword(req.body.Password)
+        updatedUserFields.Password = hashedPassword
+      }
+      //let hashedPassword = Users.hashPassword(req.body.Password);
 
 
       const updatedUser = await Users.findOneAndUpdate(
         { Username: req.params.Username },
-        {
-          $set: {
-            Username: req.body.Username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          }
-        },
+        { $set: updatedUserFields },
         { new: true }
-      );
+      )
+      
       res.json(updatedUser)
     } catch (error) {
       console.error(error)
