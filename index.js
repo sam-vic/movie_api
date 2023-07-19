@@ -2,8 +2,6 @@
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
-const ObjectId = mongoose.Types.ObjectId;
-
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -16,10 +14,12 @@ mongoose.connect(process.env.CONNECTION_URI, {
 })
 
 //local connect
-{/*mongoose.connect("mongodb://localhost:27017/cfDB", {
+{/*
+mongoose.connect("mongodb://localhost:27017/cfDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});*/}
+})
+*/}
 
 
 const express = require("express"),
@@ -69,7 +69,7 @@ app.get('/', (req, res) => {
   res.send("Server is running");
 })
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies',  passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies)
@@ -81,7 +81,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 })
 
 ///////// Get movie based on title//////////////////
-app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:Title',  passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movies) => {
       res.status(201).json(movies)
@@ -93,14 +93,10 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 })
 
 ///////// Get movie based on movie id//////////////////
-app.get('/movies/:_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/movies/id/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { _id } = req.params;
-
-    // Convert the _id string to ObjectID
-    const objectId = new ObjectId(_id);
-
-    const movie = await Movies.findById(objectId);
+    const movie = await Movies.findOne(_id)
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' });
     }
@@ -111,6 +107,7 @@ app.get('/movies/:_id', passport.authenticate('jwt', { session: false }), async 
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 //////// Get Movie based on genre ////////
 app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
