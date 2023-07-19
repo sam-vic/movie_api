@@ -8,9 +8,7 @@ const Users = Models.User;
 const Directors = Models.Director
 
 //port
-
-//local connect
-{/*mongoose.connect(process.env.CONNECTION_URI, {
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -19,12 +17,13 @@ const Directors = Models.Director
 })
 .catch((error) => {
   console.error("Error connecting to MongoDB:", error);
-})*/}
-
-mongoose.connect("mongodb://localhost:27017/cfDB", {
+});
+//local connect
+{/*mongoose.connect("mongodb://localhost:27017/cfDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-})
+});*/}
+
 
 const express = require("express"),
   bodyParser = require("body-parser"),
