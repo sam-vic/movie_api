@@ -2,6 +2,8 @@
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
+const ObjectId = mongoose.Types.ObjectId;
+
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -12,12 +14,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => {
-  console.log("Connected to MongoDB!");
-})
-.catch((error) => {
-  console.error("Error connecting to MongoDB:", error);
-});
+
 //local connect
 {/*mongoose.connect("mongodb://localhost:27017/cfDB", {
   useNewUrlParser: true,
@@ -99,10 +96,10 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 app.get('/movies/:_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const { _id } = req.params;
-    
+
     // Convert the _id string to ObjectID
     const objectId = new ObjectId(_id);
-    console.log(objectId)
+
     const movie = await Movies.findById(objectId);
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' });
