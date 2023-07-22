@@ -95,8 +95,8 @@ app.get('/movies/:Title',  passport.authenticate('jwt', { session: false }), (re
 ///////// Get movie based on movie id//////////////////
 app.get('/movies/id/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
-    const { _id } = req.params;
-    const movie = await Movies.findOne(_id)
+    const { id } = req.params;
+    const movie = await Movies.findOne(id)
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' });
     }
