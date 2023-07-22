@@ -1,10 +1,10 @@
 // logic for whole server enpoints
-const mongoose = require("mongoose");
-const Models = require("./models.js");
+const mongoose = require("mongoose")
+const Models = require("./models.js")
 
 
-const Movies = Models.Movie;
-const Users = Models.User;
+const Movies = Models.Movie
+const Users = Models.User
 const Directors = Models.Director
 
 //port
@@ -14,31 +14,31 @@ mongoose.connect(process.env.CONNECTION_URI, {
 })
 
 //local connect
-{/*
-mongoose.connect("mongodb://localhost:27017/cfDB", {
+
+{/*mongoose.connect("mongodb://localhost:27017/cfDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-})
-*/}
+})*/}
+
 
 
 const express = require("express"),
   bodyParser = require("body-parser"),
-  uuid = require("uuid");
-const morgan = require("morgan");
-morgan;
+  uuid = require("uuid")
+const morgan = require("morgan")
+morgan
 
-const fs = require("fs");
-const app = express();
+const fs = require("fs")
+const app = express()
 
-const jsonData = fs.readFileSync("./json/movies.json");
-const data = JSON.parse(jsonData);
+const jsonData = fs.readFileSync("./json/movies.json")
+const data = JSON.parse(jsonData)
 
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Morgan logs
-app.use(morgan("combined"));
+app.use(morgan("combined"))
 
 //importing in Cross-Origin-Resourse-Sharing
 const cors = require('cors')
@@ -49,12 +49,12 @@ const { check, validationResult } = require('express-validator')
 //logic to run cross origin validation
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true, 'not an origin');
+    if (!origin) return callback(null, true, 'not an origin')
     if (allowedOrigins.indexOf(origin) === -1) { // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message), false);
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin
+      return callback(new Error(message), false)
     }
-    return callback(null, true);
+    return callback(null, true)
   }
 }))
 
@@ -66,10 +66,10 @@ let auth = require('./auth.js')(app)
 
 //////////////Endpoints/////////////////////
 app.get('/', (req, res) => {
-  res.send("Server is running");
+  res.send("Server is running")
 })
 
-app.get('/movies',  passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies)
@@ -93,30 +93,32 @@ app.get('/movies/:Title',  passport.authenticate('jwt', { session: false }), (re
 })
 
 ///////// Get movie based on movie id//////////////////
-app.get('/movies/id/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/movies/id/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
-    const { id } = req.params;
-    const movie = await Movies.findOne(id)
+    const { id } = req.params
+    console.log('Received id:', id) // Add this logging statement
+    const movie = await Movies.findOne({ _id: id })
+    console.log('Movie found:', movie) // Add this logging statement
     if (!movie) {
-      return res.status(404).json({ message: 'Movie not found' });
+      return res.status(404).json({ message: 'Movie not found' })
     }
 
-    res.status(200).json(movie);
+    res.status(200).json(movie)
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
   }
-});
+})
 
 
 //////// Get Movie based on genre ////////
 app.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find({ 'Genre.Name': req.params.genreName })
     .then((movies) => {
-      res.status(200).json(movies);
+      res.status(200).json(movies)
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err)
       res.status(500).send("Error: " + err)
     })
 })
@@ -269,8 +271,8 @@ app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { sessi
 
     res.status(200).json({ message: 'Movie added to favorites' })
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error(err)
+    res.status(500).json({ message: 'Server error', error: err.message })
   }
 })
 
@@ -284,19 +286,19 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Email', 'Email does not appear to be valid').optional().isEmail(),
     check('Birthday', 'Input does not appear to be valid').optional().custom((value, { req }) => {
       // Custom validation logic
-      const birthdayRegex = /^\d{2}\/\d{2}\/\d{2}$/; // Regex pattern for "00/00/00" format
+      const birthdayRegex = /^\d{2}\/\d{2}\/\d{2}$/ // Regex pattern for "00/00/00" format
       if (!birthdayRegex.test(value)) {
-        throw new Error('Invalid birthday format');
+        throw new Error('Invalid birthday format')
       }
-      return true;
+      return true
     })
   ],
   async (req, res) => {
     try {
-      let errors = validationResult(req);
+      let errors = validationResult(req)
 
       if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(422).json({ errors: errors.array() })
       }
 
       const updatedUserFields = {
@@ -311,7 +313,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         const hashedPassword = Users.hashPassword(req.body.Password)
         updatedUserFields.Password = hashedPassword
       }
-      //let hashedPassword = Users.hashPassword(req.body.Password);
+      //let hashedPassword = Users.hashPassword(req.body.Password)
 
 
       const updatedUser = await Users.findOneAndUpdate(
@@ -344,7 +346,7 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   Users.findOne({ Username: req.params.Username })
     .then((users) => {
       if (!users) {
-        return res.status(400).send(" Unable to find_" + req.body.Username);
+        return res.status(400).send(" Unable to find_" + req.body.Username)
       } else {
         res.status(201).json(users)
       }
@@ -360,16 +362,16 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.Username + ' was not found');
+        res.status(400).send(req.params.Username + ' was not found')
       } else {
-        res.status(200).send(req.params.Username + ' was deleted.');
+        res.status(200).send(req.params.Username + ' was deleted.')
       }
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
-});
+      console.error(err)
+      res.status(500).send('Error: ' + err)
+    })
+})
 
 const port = process.env.PORT || 8080
 app.listen(port, '0.0.0.0', () => {

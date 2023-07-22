@@ -1,6 +1,6 @@
 //logic for defining movie, user, director data structure
 
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 let movieSchema = mongoose.Schema({
@@ -17,7 +17,7 @@ let movieSchema = mongoose.Schema({
     Actors: [String],
     ImagePath: String,
     Featured: Boolean
-  });
+  })
   
   let userSchema = mongoose.Schema({
     Username: {type: String, required: true},
@@ -28,24 +28,24 @@ let movieSchema = mongoose.Schema({
   })
 
   userSchema.statics.hashPassword = (password) => {
-    return bcrypt.hashSync(password, 10);
-  };
+    return bcrypt.hashSync(password, 10)
+  }
   
   userSchema.methods.validatePassword = function(password) {
-    return bcrypt.compareSync(password, this.Password);
-  };
+    return bcrypt.compareSync(password, this.Password)
+  }
 
   let directorSchema = mongoose.Schema({
     Name: {type: String, required: true},
     Description: {type: String, required: true},
     Movies: [{ type: String }]
-  });
+  })
   
   
-  let Movie = mongoose.model('Movie', movieSchema);
-  let User = mongoose.model('User', userSchema);
+  let Movie = mongoose.model('Movie', movieSchema)
+  let User = mongoose.model('User', userSchema)
   let Director = mongoose.model('Director', directorSchema)
   
-  module.exports.Movie = Movie;
-  module.exports.User = User;
+  module.exports.Movie = Movie
+  module.exports.User = User
   module.exports.Director = Director
