@@ -357,6 +357,32 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
     })
 })
 
+////// Deleting a favMovie by id //////
+app.delete('/users/favoriteMovies/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const { movieId } = req.params
+    const user = req.user // Assuming the authenticated user object is stored in req.user
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    const index = user.FavoriteMovies.indexOf(movieId)
+    if (index === -1) {
+      return res.status(404).json({ message: 'Movie not found in favorites' })
+    }
+
+    user.FavoriteMovies.splice(index, 1)
+    await user.save()
+
+    res.status(200).json({ message: 'Movie removed from favorites' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error', error: err.message })
+  }
+})
+
+
 ////// Deleting a user by Username //////
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
