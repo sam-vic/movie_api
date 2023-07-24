@@ -358,11 +358,11 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 })
 
 ////// Deleting a favMovie by id //////
-app.delete('/users/favoriteMovies/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.delete('/users/:Username/favoriteMovies/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
-    const { movieId } = req.params
-    const user = req.user // Assuming the authenticated user object is stored in req.user
+    const { Username, movieId } = req.params
 
+    const user = await Users.findOne({ Username })
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
@@ -381,7 +381,6 @@ app.delete('/users/favoriteMovies/:movieId', passport.authenticate('jwt', { sess
     res.status(500).json({ message: 'Server error', error: err.message })
   }
 })
-
 
 ////// Deleting a user by Username //////
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
