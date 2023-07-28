@@ -319,7 +319,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       const updatedUser = await Users.findOneAndUpdate(
         { Username: req.params.Username },
         { $set: updatedUserFields },
-        { new: true }
+        { returnOriginal: false }
       )
 
       res.json(updatedUser)
