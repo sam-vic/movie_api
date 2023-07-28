@@ -307,6 +307,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         Birthday: req.body.Birthday
       }
 
+        console.log('req.body',req.body)
       //hashing new password
       if (req.body.Password) {
         // Only update the password if it's provided in the request
@@ -319,8 +320,10 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       const updatedUser = await Users.findOneAndUpdate(
         { Username: req.params.Username },
         { $set: updatedUserFields },
-        { returnOriginal: false }
+        { returnDocument: 'after' }
       )
+
+      console.log('updated user:',updatedUser)
 
       res.json(updatedUser)
     } catch (error) {
