@@ -288,7 +288,14 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Username', 'Username').optional().isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
     check('Password', 'Password').optional().not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').optional().isEmail()
+    check('Email', 'Email does not appear to be valid').optional().isEmail(),
+    check('Birthday', 'Input does not appear to be valid. Please use MM/DD/YYYY format.').optional().custom((value, { req }) => {
+      // Custom validation logic
+      if (!isValidDateFormat(value)) {
+        throw new Error('Invalid birthday format. Please use MM/DD/YYYY format.');
+      }
+      return true;
+    })
   ],
   async (req, res) => {
     try {
