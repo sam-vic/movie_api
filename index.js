@@ -81,7 +81,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 })
 
 ///////// Get movie based on title//////////////////
-app.get('/movies/:Title',  passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movies) => {
       res.status(201).json(movies)
@@ -232,19 +232,19 @@ app.post('/users',
       })
   })
 
-  // pulls up all of user's favMovies
-  app.get('/users/:Username/favoriteMovies', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    try {
-      const user = await Users.findOne({ Username: req.params.Username })
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' })
-      }
-      res.status(200).json(user.FavoriteMovies)
-    } catch (err) {
-      console.error(err)
-      res.status(500).json({ message: 'Server error' })
+// pulls up all of user's favMovies
+app.get('/users/:Username/favoriteMovies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const user = await Users.findOne({ Username: req.params.Username })
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
     }
-  })
+    res.status(200).json(user.FavoriteMovies)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+})
 
 // allow user to add favmovies to their favMovie arry
 app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { session: false }), async (req, res) => {
@@ -277,7 +277,7 @@ app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { sessi
 })
 
 function isValidDateFormat(dateString) {
-  const dateRegex = /^(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-\d{4}$/
+  const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/\d{4}$/
   return dateRegex.test(dateString)
 }
 
@@ -291,8 +291,8 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Email', 'Email does not appear to be valid').optional().isEmail(),
     check('Birthday', 'Input does not appear to be valid').optional().custom((value, { req }) => {
       // Custom validation logic
-       if (!isValidDateFormat(value)) {
-        throw new Error('Invalid birthday format. Please use MM-DD-YYYY format.');
+      if (!isValidDateFormat(value)) {
+        throw new Error('Invalid birthday format. Please use MM/DD/YYYY format.');
       }
       return true;
     })
@@ -311,7 +311,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         Birthday: Date.parse(req.body.Birthday)
       }
 
-        console.log('req.body',req.body)
+      console.log('req.body', req.body)
       //hashing new password
       if (req.body.Password) {
         // Only update the password if it's provided in the request
@@ -327,7 +327,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         { returnDocument: 'after' }
       )
 
-      console.log('updated user:',updatedUser)
+      console.log('updated user:', updatedUser)
 
       res.json(updatedUser)
     } catch (error) {
