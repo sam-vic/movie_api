@@ -276,9 +276,27 @@ app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { sessi
   }
 })
 
-function isValidDateFormat(dateString) {
-  const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/\d{4}$/
-  return dateRegex.test(dateString)
+function isValidDateFormat(payload) {
+  // Check if all required fields are present
+  if (!payload.Year || !payload.Month || !payload.Day) {
+    return false;
+  }
+
+  // Validate each part of the date
+  const year = parseInt(payload.Year, 10);
+  const month = parseInt(payload.Month, 10);
+  const day = parseInt(payload.Day, 10);
+
+  if (isNaN(year) || isNaN(month) || isNaN(day)) {
+    return false;
+  }
+
+  // Check if the month, day, and year are within valid ranges
+  if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > new Date().getFullYear()) {
+    return false;
+  }
+
+  return true;
 }
 
 //Update user////
@@ -288,7 +306,14 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Username', 'Username').optional().isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
     check('Password', 'Password').optional().not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').optional().isEmail()
+    check('Email', 'Email does not appear to be valid').optional().isEmail(),
+    check('Birthday', 'Invalid birthday format').optional().custom((value, { req }) => {
+      // Validate the birthday format using the function
+      if (!isValidDateFormat(req.body)) {
+        throw new Error('Invalid birthday format. Please provide valid year, month, and day.');
+      }
+      return true;
+    })
   ],
   async (req, res) => {
     try {
@@ -298,13 +323,9 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         return res.status(422).json({ errors: errors.array() })
       }
 
-      const { Username, Email, Birthday, month, day, year } = req.body;
-      const consolidatedBirthday = `${month}/${day}/${year}`;
-
       const updatedUserFields = {
         Username,
-        Email,
-        Birthday: Date.parse(consolidatedBirthday)
+        Email
       }
 
       console.log('req.body', req.body)
