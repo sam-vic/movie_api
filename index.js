@@ -276,6 +276,11 @@ app.post('/users/:Username/favoriteMovies', passport.authenticate('jwt', { sessi
   }
 })
 
+function isValidDateFormat(dateString) {
+  const dateRegex = /^(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-\d{4}$/
+  return dateRegex.test(dateString)
+}
+
 //Update user////
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   //code validation
@@ -286,11 +291,10 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Email', 'Email does not appear to be valid').optional().isEmail(),
     check('Birthday', 'Input does not appear to be valid').optional().custom((value, { req }) => {
       // Custom validation logic
-      const birthdayRegex = /^\d{2}\/\d{2}\/\d{2}$/ // Regex pattern for "00/00/00" format
-      if (!birthdayRegex.test(value)) {
-        throw new Error('Invalid birthday format')
+       if (!isValidDateFormat(value)) {
+        throw new Error('Invalid birthday format. Please use MM-DD-YYYY format.');
       }
-      return true
+      return true;
     })
   ],
   async (req, res) => {
@@ -304,7 +308,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       const updatedUserFields = {
         Username: req.body.Username,
         Email: req.body.Email,
-        Birthday: req.body.Birthday
+        Birthday: Date.parse(req.body.Birthday)
       }
 
         console.log('req.body',req.body)
