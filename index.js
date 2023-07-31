@@ -289,7 +289,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
     check('Password', 'Password').optional().not().isEmpty(),
     check('Email', 'Email does not appear to be valid').optional().isEmail(),
-    check('Birthday', 'Input does not appear to be valid').optional().custom((value, { req }) => {
+    check('Birthday', 'Input does not appear to be valid. Please use MM/DD/YYYY format.').optional().custom((value, { req }) => {
       // Custom validation logic
       if (!isValidDateFormat(value)) {
         throw new Error('Invalid birthday format. Please use MM/DD/YYYY format.');
@@ -305,10 +305,13 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         return res.status(422).json({ errors: errors.array() })
       }
 
+      const { Username, Email, Birthday, month, day, year } = req.body;
+      const consolidatedBirthday = `${month}/${day}/${year}`;
+
       const updatedUserFields = {
-        Username: req.body.Username,
-        Email: req.body.Email,
-        Birthday: Date.parse(req.body.Birthday)
+        Username,
+        Email,
+        Birthday: Date.parse(consolidatedBirthday)
       }
 
       console.log('req.body', req.body)
