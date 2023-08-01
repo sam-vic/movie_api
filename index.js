@@ -307,6 +307,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
 
       const updatedUserFields = {
         Username: req.body.Username,
+        Password: req.body.Password,
         Email: req.body.Email,
         Birthday: Date.parse(req.body.Birthday)
       }
@@ -319,7 +320,6 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         updatedUserFields.Password = hashedPassword
       }
       //let hashedPassword = Users.hashPassword(req.body.Password)
-
 
       const updatedUser = await Users.findOneAndUpdate(
         { Username: req.params.Username },
