@@ -287,7 +287,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   [
     check('Username', 'Username').optional().isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
-    check('Password', 'Password').optional().not().isEmpty(),
+    check('Password', 'Password').optional().not(),
     check('Email', 'Email does not appear to be valid').optional().isEmail(),
     check('Birthday', 'Input does not appear to be valid').optional().custom((value, { req }) => {
       // Custom validation logic
